@@ -5,7 +5,7 @@
 '''
 Notes:
 
-- For the sake of this program, CO2 emissions per second of computer usage will be assumed to be 0.0001g, this may be higher or lower than the actual value but will still be close to accurate
+- For the sake of this program, CO2 emissions per second of computer usage will be assumed to be 0.0084g, this may be higher or lower than the actual value but will still be close to accurate
 - For this reason, the program (for the sake of simplicity) will ask if you are giving an answer in seconds, minutes or hours
 - Breaktime is determined based on the duration of computer usage
 '''
@@ -13,17 +13,18 @@ Notes:
 import json
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 
 # Creating baseline values -----
-BASE_RATE = 0.0001
+BASE_RATE = 0.0084
 MINIMUM = 300
 
-def calc_co2_usage(seconds: float) -> dict:
+def calc_co2_usage(seconds: float, BASE_RATE) -> dict:
     # Calculate estimated carbon footprint from seconds.
     total_co2 = seconds * BASE_RATE
     mins = seconds / 60
     hours = mins / 60
+
 
     return {
         "seconds": round(seconds, 2),
@@ -37,14 +38,14 @@ def breaktime(seconds):
     mins = seconds / 60
     hours = mins / 60
 
-    if seconds >= MINIMUM:  
+    if seconds >= MINIMUM:
         contemp = datetime.now()
         if hours > 5:
             break_add = 2
             break_t = contemp + timedelta (hours=break_add)
             return break_t
-            
-            
+
+
         else:
             break_add = hours / 2
             if (hours / 2) < 1:
@@ -58,7 +59,7 @@ def breaktime(seconds):
         break_t = None
         return break_t
 
-    
+
 
 
 # Tkinter initialisation ------
@@ -114,7 +115,11 @@ class ComputerCO2App(tk.Tk):
         self.result_text = tk.Text(result_frame, height=8, wrap="word", state="disabled")
         self.result_text.pack(fill="both", expand=True, padx=8, pady=8)
 
-
+        # Adjust Baseline
+        ttk.Label(frame, text="CO₂ Base Rate (kg/sec):").grid(row=1, column=0, pady=5, sticky="w")
+        self.baserate_var = tk.DoubleVar(value=BASE_RATE)
+        self.baserate_entry = ttk.Entry(frame, textvariable = self.baserate_var, width = 10)
+        self.baserate_entry.grid(row=1, column=1, pady=5)
 
         self.last_result = None
 
@@ -136,7 +141,9 @@ class ComputerCO2App(tk.Tk):
             else:
                 seconds = time_val
 
-            result = calc_co2_usage(seconds)
+            # updates the baseline
+            BASE_RATE = self.baserate_var.get()
+            result = calc_co2_usage(seconds,BASE_RATE)
             self.last_result = result
             suggest = breaktime(seconds)
 
@@ -145,8 +152,7 @@ class ComputerCO2App(tk.Tk):
                     f"Usage Time: {result['hours']} hours "
                     f"({result['minutes']} mins, {result['seconds']} secs)\n"
                     f"Estimated CO2 Emissions: {result['co2_kg']} kg\n\n"
-                    f"That’s approximately {result['co2_kg']*1000:.2f} grams of CO2.\n"
-                    f"Tip: Turning off your PC when idle can save power and emissions! \n"
+                    f"Tip: Turning off your PC when idle can save power and carbon emissions! \n"
                     f"Break: Please take a break at {suggest}"
                 )
             else:
@@ -154,8 +160,7 @@ class ComputerCO2App(tk.Tk):
                     f"Usage Time: {result['hours']} hours "
                     f"({result['minutes']} mins, {result['seconds']} secs)\n"
                     f"Estimated CO2 Emissions: {result['co2_kg']} kg\n\n"
-                    f"That’s approximately {result['co2_kg']*1000:.2f} grams of CO2.\n"
-                    f"Tip: Turning off your PC when idle can save power and emissions! \n"
+                    f"Tip: Turning off your PC when idle can save power and carbon emissions! \n"
                 )
 
             self._set_result(display)
@@ -196,7 +201,7 @@ class ComputerCO2App(tk.Tk):
             "- Slightly reduce screen brightness",
             "- Unplug your charger when the device is full. (if using a laptop)",
             "- Have at least one day a week where you completely step away from your computer",
-            
+
 
         ]
         messagebox.showinfo("Eco Tips", "\n".join(tips))
