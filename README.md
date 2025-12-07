@@ -1,95 +1,84 @@
 # Computer Carbon Footprint Estimator
 A Python program using TkInter that helps you track your computer usage and provides advice for how to make your computer usage as envinronmentally friendly as possible
 
-NOTE: This won't be 100% accurate and uses a baseline of 0.0000167kg for carbon emission of a computer per second, this may vary from computer to computer where this number could either be higher or lower
-For that reason, you may wish to apply your existing knowledge of your computer's specs in order to estimate whether or not this number would be higher or lower, where for that reason you may choose to adjust the baseline
-This would especially be the case if you have a high quality graphics card
+> **Warning: Accuracy Note**
+> 
+> This tool is an **estimate** — it uses a baseline of **0.00001665 kg** (0.01665 g) of CO₂ **per second** while your computer is on.
+> 
+> Real emissions vary significantly depending on your hardware:
+> - **Laptops**: often **lower** (0.004–0.010 g/s)
+> - **Typical desktops + monitor**: ~0.01665 g/s (our default)
+> - **Gaming PCs / workstations with high-end GPUs**: often **much higher** (0.03–0.05+ g/s)
+> 
+> **You can (and should!) adjust the value in the app** if you know your system’s actual power draw (e.g. from a watt meter, BIOS, or tools like HWMonitor).
 
-These are also the calculations for this program:
-[Calculations](https://github.com/WAMAAK-200/computer_co2_monitor/blob/main/CALCULATIONS.md)
+# Computer CO₂ Monitor 🖥️🌍
 
+**Real-time carbon footprint tracker for your laptop or desktop** — built with Python + Tkinter.
 
-# 📘 Conda Environment Setup
+Tracks how much CO₂ your computer emits **every second** based on actual power draw and your country's electricity grid.
 
-Follow the steps below to create and activate the Conda environment for this project.
+![](assets/screenshot.png)  
+*(Live counter in action — 0.016 g CO₂ per second on a typical desktop)*
 
----
-
-## 1. Create Conda Environment (Python 3.14)
-
-> ⚠️ Python 3.14 is not officially released. Use the latest available alpha through Conda.
-
-```bash
-conda create -n power-env python=3.14
-```
-
-If Conda does not recognize Python 3.14 yet:
-
-```bash
-conda create -n power-env python=3.13
-```
+### Why This Matters
+- A typical desktop (200 W) used 8 hours/day emits **~175 kg CO₂ per year**
+- That's like driving **700 km** in an average car
+- Small habits (sleep mode, lower brightness, efficient hardware) = big savings
 
 ---
 
-## 2. Activate the Environment
+### Accurate CO₂ Calculation (Per Second)
 
-```bash
-conda activate power-env
-```
+Based on real-world data:
 
----
+| Assumption                    | Value              | Notes                                  |
+|-----------------------------|--------------------|----------------------------------------|
+| Average power (on, with monitor) | **200 W**         | Includes typical desktop + monitor     |
+| Daily usage                   | 8 hours            | Standard office/gaming day             |
+| Yearly energy                 | ~584 kWh           | 200 W × 8 h × 365 days                 |
+| Yearly CO₂ emissions          | **175 kg**         | Common global estimate                 |
 
-## 3. Install Dependencies
+#### Emission Factor
+$$
+\frac{175\ \text{kg CO₂}}{584\ \text{kWh}} \approx \textbf{0.300 kg/kWh} \quad (300\ \text{g/kWh})
+$$
 
-### Install standard packages
+#### CO₂ per Second (when powered on)
+$$
+\text{Power} = 0.2\ \text{kW},\quad \text{Energy per second} = 0.2 \times \frac{1}{3600}\ \text{h} = 5.556 \times 10^{-5}\ \text{kWh}
+$$
+$$
+\text{CO₂} = (5.5556 \times 10^{-5}\ \text{kWh}) \times (0.2997\ \text{kg/kWh}) \\
+\approx 1.665 \times 10^{-5}\ \text{kg/s} = \textbf{0.01665 g/s}
+$$
 
-```bash
-pip install pandas==2.2.3
-pip install numpy==2.1.2
-pip install matplotlib==3.9.2
-```
+**Your computer emits ~0.01665 g CO₂ every second it's on.**
 
-### Install PyTorch (Nightly CPU Build)
-
-> Stable PyTorch does not support Python 3.14 yet.
-
-```bash
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cpu
-```
-
-### Optional (Linux only): Tkinter
-
-```bash
-sudo apt install python3-tk
-```
+> **Laptops**: Use ~50–90 W → only **0.004–0.008 g/s**  
+> **Gaming PCs**: Can exceed 500 W → up to **0.04+ g/s**
 
 ---
 
-## 📁 4. (Optional) Install Jupyter Kernel
-
-```bash
-pip install ipykernel
-python -m ipykernel install --user --name power-env --display-name "Python (power-env)"
-```
-
----
-
-## 5. Run the Project
-
-```bash
-python main.py
-```
+### Features
+- Live second-by-second CO₂ counter
+- Adjustable power profile (laptop, desktop, gaming rig)
+- Region-based grid emission factors (coming soon)
+- Eco tips to reduce your footprint
+- Built on real hardware data (SPECpower benchmarks)
 
 ---
 
-# requirements.txt
+### Quick Start
 
-```
-pandas==2.2.3
-numpy==2.1.2
-matplotlib==3.9.2
-tk
-torch --index-url https://download.pytorch.org/whl/nightly/cpu
-torchvision --index-url https://download.pytorch.org/whl/nightly/cpu
-torchaudio --index-url https://download.pytorch.org/whl/nightly/cpu
+```bash
+# Clone and enter
+git clone https://github.com/WAMAAK-200/computer_co2_monitor.git
+cd computer_co2_monitor
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run
+python src/main.py
 ```

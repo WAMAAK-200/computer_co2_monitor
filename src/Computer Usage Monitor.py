@@ -16,7 +16,7 @@ from tkinter import ttk, messagebox, filedialog
 from datetime import datetime, timedelta
 
 # Creating baseline values -----
-BASE_RATE = 0.0000167
+BASE_RATE = 0.00001665
 MINIMUM = 300
 
 def calc_co2_usage(seconds: float, BASE_RATE) -> dict:
