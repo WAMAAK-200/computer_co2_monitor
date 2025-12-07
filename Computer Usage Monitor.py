@@ -5,7 +5,7 @@
 '''
 Notes:
 
-- For the sake of this program, CO2 emissions per second of computer usage will be assumed to be 0.0084g, this may be higher or lower than the actual value but will still be close to accurate
+- For the sake of this program, CO2 emissions per second of computer usage will be assumed to be 0.0167g/0.0000167kg, this may be higher or lower than the actual value but will still be close to accurate
 - For this reason, the program (for the sake of simplicity) will ask if you are giving an answer in seconds, minutes or hours
 - Breaktime is determined based on the duration of computer usage
 '''
@@ -16,7 +16,7 @@ from tkinter import ttk, messagebox, filedialog
 from datetime import datetime, timedelta
 
 # Creating baseline values -----
-BASE_RATE = 0.0084
+BASE_RATE = 0.0000167
 MINIMUM = 300
 
 def calc_co2_usage(seconds: float, BASE_RATE) -> dict:
@@ -215,3 +215,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
